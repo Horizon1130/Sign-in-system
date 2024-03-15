@@ -1,0 +1,46 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.jakewharton.butterknife'
+apply plugin: 'com.neenbedankt.android-apt'
+
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "28.0.2"
+
+    defaultConfig {
+        applicationId "cn.xiaoph.apps"
+        minSdkVersion 16
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        ndk {
+            abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
+        }
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile project(path: ':library')
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'cn.pedant.sweetalert:library:1.3'
+    compile 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
+    compile 'com.jakewharton:butterknife:8.5.1'
+    apt 'com.jakewharton:butterknife-compiler:8.5.1'
+    compile 'com.roughike:bottom-bar:2.0.2'
+    compile 'com.baoyz.swipemenulistview:library:1.3.0'
+    compile 'org.sufficientlysecure:html-textview:2.0'
+    compile 'com.github.zfman:TimetableView:2.0.6'
+    compile files('libs/AMap3DMap_7.8.0_AMapNavi_7.8.0_AMapSearch_7.7.0_AMapLocation_5.3.0_20210317.jar')
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+}

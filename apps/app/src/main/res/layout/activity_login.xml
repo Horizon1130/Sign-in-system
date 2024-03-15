@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:src="@mipmap/bg_login_top" />
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btn_login"
+        android:layout_marginBottom="50dp"
+        android:orientation="vertical"
+        android:padding="15dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|center"
+            android:layout_marginBottom="100dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:text="欢迎使用课堂考勤系统"
+            android:textColor="#000"
+            android:textSize="20dp" />
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:text="账号"
+            android:textColor="#000"
+            android:textSize="20dp" />
+
+        <EditText
+            android:id="@+id/input_phone"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="12dp"
+            android:background="@null"
+            android:hint="@string/hint_login_account"
+            android:maxLength="11"
+            android:paddingLeft="10dp"
+            android:textColor="#393D49"
+            android:textSize="@dimen/font_size" />
+
+        <View
+            style="@style/h_line"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/line_height"
+            android:layout_below="@+id/layout_title_bar" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:text="密码"
+            android:textColor="#000"
+            android:textSize="20dp" />
+
+        <EditText
+            android:id="@+id/input_password"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="12dp"
+            android:background="@null"
+            android:hint="@string/hint_login_password"
+            android:inputType="textPassword"
+            android:lines="1"
+            android:maxLength="25"
+            android:paddingLeft="10dp"
+            android:textColor="#393D49"
+            android:textSize="@dimen/font_size" />
+
+        <View
+            style="@style/h_line"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/line_height"
+            android:layout_below="@+id/layout_title_bar" />
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="15dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_solid_login_button"
+        android:text="登录"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_size" />
+
+</RelativeLayout>

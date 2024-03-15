@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>资源管理</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="stylesheet" href="${request.contextPath}/css/layui.css" media="all">
+<link rel="stylesheet" href="${request.contextPath}/css/style.css" media="all">
+
+</head>
+<body>
+	<div class="layui-item-body">
+
+		<script src="${request.contextPath }/layui.js" charset="utf-8"></script>
+
+		<div class="layui-row">
+			<div class="layui-col-md9">
+				<div id="authority_buttons" class="grid-demo grid-demo-bg1">
+
+				</div>
+			</div>
+			<div class="layui-col-md3">
+				<div class="grid-demo" style="float: right; margin-right: 30px;">
+					<button id="btn_search"
+							class="layui-btn layui-btn-sm layui-btn-normal">
+						<i class="layui-icon">&#xe615;</i>查询
+					</button>
+				</div>
+			</div>
+		</div>
+		<table id="lay_table_main" style="width: 100%; margin-bottom: 20px;"></table>
+		<script>
+			layui.use(['form'], function () {
+				var $ = layui.jquery;
+				var form = layui.form;
+
+				var resourceId = getQueryVariable('resourceId');
+				$.post('${request.contextPath}/v1/authority/' + resourceId + '/buttons', function (data) {
+					if (data.buttons.length > 0) {
+						data.buttons.forEach(function (v, i) {
+							var button = $('<button id="btn_' + v.url + '" type="button" class="' + v.style + '"><i class="layui-icon">' + v.icon + '</i> ' + v.title + '</button>');
+							$('#authority_buttons').append(button);
+						});
+
+						data.buttons.forEach(function (v, i) {
+							$('head').append('<script type="text/javascript" src="${request.contextPath }/libs/${libs }' + v.url + '.js"/>');
+						});
+					} else {
+						$('#authority_buttons').append('&nbsp;');
+					}
+					form.render();
+				}, 'json');
+			});
+
+			function getQueryVariable(variable) {
+				var query = window.location.search.substring(1);
+				var vars = query.split("&");
+				for (var i = 0; i < vars.length; i++) {
+					var pair = vars[i].split("=");
+					if (pair[0] == variable) {
+						return pair[1];
+					}
+				}
+				return (false);
+			}
+		</script>
+		<script type="text/javascript" src="${request.contextPath }/libs/${libs }list.js"></script>
+
+	</div>
+</body>
+</html>

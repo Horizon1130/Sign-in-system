@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>权限配置</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="${request.contextPath }/css/layui.css" media="all">
+    <link rel="stylesheet" href="${request.contextPath }/css/style.css" media="all">
+    <style>
+        html {
+            height: 93.5%;
+        }
+
+        body {
+            margin-bottom: 50px;
+            padding: 15px;
+        }
+
+        .layui-row {
+            background: #fff;
+            min-height: 100%;
+            border-radius: 5px;
+            padding: 10px;
+            height: 100%;
+            display: flex;
+        }
+
+        .layui-row-label {
+            padding: 13px;
+            background: #fff;
+            cursor: pointer;
+        }
+
+        .layui-row-label-show {
+            background: #E7F8FF;
+            color: #01AAED;
+            border-right: 2px solid #01AAED;
+        }
+
+        .layui-col-xs-left {
+            width: 10%;
+            float: left;
+            text-align: center;
+            height: 100%;
+            border-right: 1px solid #eee;
+        }
+
+        .layui-col-xs-center {
+            width: 80%;
+            float: left;
+        }
+
+        .layui-col-xs-right {
+            width: 10%;
+            float: left;
+            text-align: center;
+            padding-top: 3px;
+        }
+
+        div .title {
+            padding: 9px;
+        }
+
+        .operation-context {
+            margin-left: 20px;
+            margin-bottom: 30px;
+        }
+
+        .layui-form-item .layui-input-inline {
+            margin-right: 20px;
+        }
+
+        .lay-button-right {
+            margin-right: 10px;
+        }
+
+        .layui-form-item {
+            border-top: 1px solid #e6e6e6;
+            padding-top: 10px;
+            margin-top: 15px;
+        }
+
+        .layui-input-block {
+            margin-left: 0px;
+            margin-right: 10px;
+        }
+
+        .layui-form-item .layui-form-checkbox[lay-skin=primary] {
+            margin-top: 5px;
+            margin-right: 45px;
+        }
+
+        h3 .layui-form-checkbox[lay-skin=primary] span {
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        .layui-form-checkbox[lay-skin=primary] span {
+            width: 100px;
+        }
+
+        .layui-form-checked[lay-skin=primary] i {
+            border-color: #01AAED !important;
+            background-color: #01AAED;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-row">
+    <input type="hidden" id="input_role_id"/>
+    <div class="layui-col-xs-left">
+        <div>
+            <div class="title"><h3 style="color: #777777;">角色分配</h3></div>
+            <hr>
+            <ul style="margin-top: 20px;" id="role_list">
+            </ul>
+        </div>
+    </div>
+    <div class="layui-col-xs-center">
+        <div>
+            <div class="title" style="margin-left: 10px;"><h3 style="color: #777777;">权限控制</h3></div>
+            <hr>
+            <div class="operation-context" style="margin-top: 20px;">
+                <h2 id="role_name">角色名称</h2>
+                <br>
+                <span>说明：为角色配置控制页面访问及功能。</span>
+                <hr/>
+                <form class="layui-form" style="margin-top: 30px;">
+
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="layui-col-xs-right">
+        <button class="layui-btn layui-btn-normal" id="btn_save">保 存</button>
+        <hr>
+    </div>
+</div>
+</body>
+</html>
+<script src="${request.contextPath }/layui.js" charset="utf-8"></script>
+<script>
+
+    layui.use(['form', 'handler'], function () {
+        var form = layui.form;
+        var $ = layui.$;
+        var handler = layui.handler;
+        var resources;
+
+        $('#btn_save').click(function () {
+            var items = $('input[name="ckb_resource"]:checked');
+
+            var list = [];
+            var index = 0;
+            items.each(function (i, v) {
+                if ($(v).eq(0).prop('checked')) {
+                    list[index] = $(v).eq(0).val();
+                    index++;
+                }
+            });
+            var loadding = layer.msg('玩命加载中，请稍候...', {icon: 16, time: false, shade: 0.4});
+            $.ajax({
+                url: parent.appBaseUri + '/v1/authority/resources/save',
+                type: 'post',
+                data: {
+                    roleId: $('#input_role_id').val(),
+                    resources: list.toString()
+                },
+                dataType: 'json',
+                success: function (res) {
+                    layer.close(loadding);
+                    handler(res, function(){
+                        layer.alert(res.msg, {
+                            icon: 1
+                        });
+                    });
+
+                },
+                error: function (error) {
+                    layer.alert(error.errorMsg, {
+                        icon: 2
+                    });
+                }
+            });
+        });
+
+        function loaddingRoles() {
+            var loadding = layer.msg('数据加载中，请稍候...', {icon: 16, time: false, shade: 0.4});
+            $.ajax({
+                url: parent.appBaseUri + '/v1/settings/role/all',
+                type: 'post',
+                dataType: 'json',
+                success: function (data) {
+                    layer.close(loadding);
+                    handler(data, function () {
+                        data.data.forEach(function (v, i) {
+                            var li = $('<li class="layui-row-label" lay-id="' + v.roleId + '">' + v.title + '</li>');
+                            li.click(function () {
+                                roleClick($(this));
+                            });
+                            $('#role_list').append(li);
+                        });
+                    });
+                },
+                error: function (error) {
+                    layer.alert(error.errorMsg, {
+                        icon: 2
+                    });
+                }
+            });
+        }
+
+        function roleClick(_this) {
+            _this.addClass("layui-row-label-show").siblings().removeClass("layui-row-label-show");
+            $('#role_name').text(_this.text());
+            $('#input_role_id').val(_this.attr('lay-id'));
+            loaddingRoleAuthority();
+        }
+
+        function loaddingRoleAuthority() {
+            $.ajax({
+                url: parent.appBaseUri + '/v1/authority/resources/view',
+                type: 'get',
+                data: {
+                    roleId: $('#input_role_id').val()
+                },
+                dataType: 'json',
+                success: function (res) {
+                    handler(res, function(){
+                        $('input[name="ckb_resource"]').each(function (i, v) {
+                            $(this).prop('checked', false);
+                        });
+
+                        if (res.data.length > 0) {
+                            res.data.forEach(function (v, i) {
+                                $('input[value="' + v.resourceId + '"]').prop('checked', true);
+                            });
+                        }
+                        form.render();
+                    });
+                },
+                error: function (error) {
+                    layer.alert(error.errorMsg, {
+                        icon: 2
+                    });
+                }
+            });
+        }
+
+        $(function () {
+            $.ajax({
+                url: parent.appBaseUri + '/v1/authority/resources/list',
+                type: 'post',
+                dataType: 'json',
+                success: function (data) {
+                    handler(data, function () {
+                        resources = data.data;
+                        loaddingRoles();
+                        createInput();
+                    });
+                },
+                error: function (error) {
+                    layer.alert(error.errorMsg, {
+                        icon: 2
+                    });
+                }
+            });
+        });
+
+        function createInput() {
+            resources.forEach(function (c, i) {
+                var catalog = $('<div class="lay-catalog"></div>')
+                var cTitle = $('<h3><input type="checkbox" name="ckb_resource" value="' + c.resourceId + '" lay-skin="primary" title="' + c.title + '"></h3>');
+
+                catalog.append(cTitle);
+
+                var menus = $('<div class="layui-form-item"></div>')
+
+                c.nodes.forEach(function (m, j) {
+                    var menu = $('<div class="layui-input-block"></div>');
+                    var mTitle = $('<input type="checkbox" name="ckb_resource" value="' + m.resourceId + '" lay-skin="primary" title="' + m.title + '">')
+                    menu.append(mTitle);
+
+                    m.nodes.forEach(function (b, k) {
+                        var bTitle = $('<input type="checkbox" name="ckb_resource" value="' + b.resourceId + '" lay-skin="primary" title="' + b.title + '">')
+                        menu.append(bTitle);
+                    });
+                    menus.append(menu);
+                });
+                catalog.append(menus);
+                $('form').append(catalog);
+            });
+            form.render();
+        }
+
+    });
+</script>

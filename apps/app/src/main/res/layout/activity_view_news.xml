@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_bg_split"
+    android:orientation="vertical">
+
+    <include layout="@layout/view_title_bar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:padding="7dp">
+
+            <TextView
+                android:id="@+id/input_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="dfsdfsd"
+                android:textColor="#393D49"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/input_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="刚刚"
+                android:textSize="@dimen/font_small_size" />
+
+            <org.sufficientlysecure.htmltextview.HtmlTextView
+                android:id="@+id/input_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"></org.sufficientlysecure.htmltextview.HtmlTextView>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

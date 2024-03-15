@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>${title!}</title>
+    <link rel="stylesheet" href="${request.contextPath}/css/layui.css">
+    <link rel="stylesheet" href="${request.contextPath}/css/master.css">
+    <style>
+        .layui-side-scroll {
+            height: 100% !important;
+        }
+    </style>
+</head>
+
+<body>
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">${title!}</div>
+
+        <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item" lay-unselect="">
+                <a href="javascript:;" layadmin-event="refresh" title="刷新">
+                    <i class="layui-icon layui-icon-refresh-3"></i>
+                </a>
+            </li>
+        </ul>
+
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item layui-hide-xs" title="全屏" lay-unselect=""><a
+                    href="javascript:;" layadmin-event="fullscreen"> <i
+                    class="layui-icon layui-icon-screen-full"></i>
+            </a></li>
+            <li class="layui-nav-item" lay-unselect="">
+                <a href="javascript:;" id="btn_update_pwd" title="修改密码">
+                    <i class="layui-icon layui-icon-password"></i>
+                </a>
+            </li>
+
+            <li class="layui-nav-item"><a id="btn_user_info" href="javascript:;">
+                <img id="small_user_face" src="${request.contextPath }/images/empty_face.png" class="layui-nav-img">
+                <span id="small_user_name"></span>
+            </a>
+            </li>
+            <li class="layui-nav-item" style="color: #e6e6e6;">
+                |
+            </li>
+            <li class="layui-nav-item"><a href="javascript:;">
+                <span id="btn_exit" style="color: #FF5722;">退出</span>
+            </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="user-photo">
+            <a class="img" title="我的头像">
+                <img id="full_user_face"
+                     src="${request.contextPath }/images/empty_face.png">
+            </a>
+            <p>
+                您好！<span id="full_user_name" class="userName"></span>,
+                欢迎登录
+            </p>
+            <form class="layui-form" action="">
+                <div class="layui-form-item">
+
+                </div>
+            </form>
+        </div>
+        <div class="navBar layui-side-scroll"></div>
+    </div>
+
+    <div class="layui-body">
+        <div class="layui-tab layui-tab-brief " lay-filter="tab_context"
+             lay-allowclose="true">
+            <ul class="layui-tab-title">
+            </ul>
+            <div class="layui-tab-content clildFrame">
+            </div>
+        </div>
+    </div>
+    <div class="layui-footer">
+        <!-- 底部固定区域 -->
+        ${(copyright)!}
+    </div>
+</div>
+<script>
+
+</script>
+<script type="text/javascript" src="${request.contextPath}/layui.js"></script>
+<script type="text/javascript" src="${request.contextPath}/js/menu.js"></script>
+<script type="text/javascript">
+    var appBaseUri = '${request.contextPath}';
+</script>
+<script type="text/javascript" src="${request.contextPath}/js/index.js"></script>
+<script type="text/javascript" src="${request.contextPath}/js/master.js"></script>
+</body>
+
+</html>

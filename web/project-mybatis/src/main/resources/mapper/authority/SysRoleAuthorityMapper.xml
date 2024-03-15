@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.myway.platform.mysql.authority.mapper.SysRoleAuthorityDao">
+
+    <select id="getResourcesByRole" resultType="com.myway.platform.mysql.authority.entity.SysResources">
+        SELECT
+        resource.resource_id,
+        resource.title,
+        resource.url,
+        resource.icon,
+        resource.style,
+        resource.classify,
+        resource.parent_id,
+        resource.grouping,
+        resource.sort
+        FROM
+        t_sys_role_authority authority
+        LEFT JOIN t_sys_resources resource ON authority.resource_id = resource.resource_id
+        <where>
+            AND resource.classify IN ('CATALOG', 'MENU')
+            AND resource.visible = 1
+            AND resource.`status` = 1
+            AND authority.role_id = #{role}
+        </where>
+        ORDER BY sort ASC
+    </select>
+    <select id="getResourceButtonsByResourceIdAndRoleId"
+            resultType="com.myway.platform.mysql.authority.entity.SysResources">
+        SELECT
+        resource.resource_id,
+        resource.title,
+        resource.url,
+        resource.icon,
+        resource.style,
+        resource.classify,
+        resource.parent_id,
+        resource.sort
+        FROM
+        t_sys_role_authority authority
+        LEFT JOIN t_sys_resources resource ON authority.resource_id = resource.resource_id
+        <where>
+            AND resource.classify IN ('BUTTON')
+            AND resource.visible = 1
+            AND resource.`status` = 1
+            AND authority.role_id = #{roleId}
+            and resource.parent_id = #{resourceId}
+        </where>
+        ORDER BY
+        sort DESC;
+    </select>
+</mapper>

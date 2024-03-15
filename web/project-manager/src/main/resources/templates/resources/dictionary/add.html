@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>字典添加</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="${request.contextPath }/css/layui.css" media="all">
+    <style type="text/css">
+        .layui-layout-admin .layui-footer {
+            left: 0px;
+            padding: 4px 10px;
+            text-align: right;
+        }
+
+        .layui-treeSelect .ztree li {
+            line-height: inherit;
+            padding: 5px 0;
+        }
+
+        .layui-upload img {
+            width: 150px;
+            height: 150px;
+        }
+
+    </style>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <form class="layui-form" lay-filter="formMain" style="margin-top: 10px; margin-right: 10px;">
+        <div class="layui-row">
+            <div class="layui-col-md9">
+                <div class="grid-demo grid-demo-bg1">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">字典编号</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="code"
+                                   placeholder="请输入字典编号" autocomplete="off"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">字典名称</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="title" lay-verify="required"
+                                   placeholder="请输入字典名称" autocomplete="off"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">所属上级</label>
+                        <div class="layui-input-block">
+                            <div id="parentId" class="xm-select-demo"></div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">所属分类</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="classify" lay-verify="required"
+                                   placeholder="请输入所属分类" autocomplete="off"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">所属等级</label>
+                        <div class="layui-input-block">
+                            <select name="level" lay-verify="required">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">状态</label>
+                            <div class="layui-input-block ">
+                                <input type="checkbox" name="status" title="启用"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-footer">
+            <button class="layui-btn" lay-submit="" lay-filter="formSubmit">保 存</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重 置</button>
+        </div>
+    </form>
+
+</div>
+<script src="${request.contextPath }/layui.js" charset="utf-8"></script>
+<script src="${request.contextPath }/lay/modules/xm-select.js"></script>
+<script>
+
+    layui.use(['form', 'handler'], function () {
+        var form = layui.form, $ = layui.$, handler = layui.handler;
+
+        $(function () {
+            var loading = layer.msg('玩命加载中，请稍候...', {icon: 16, time: false, shade: 0.4});
+
+            $.ajax({
+                url: parent.parent.appBaseUri + '/v1/resources/dictionary/tree',
+                type: 'post',
+                dataType: 'json',
+                success: function (data) {
+                    layer.close(loading);
+                    handler(data, function () {
+                        xmSelect.render({
+                            el: '#parentId',
+                            model: {label: {type: 'text'}},
+                            radio: true,
+                            name: 'parentId',
+                            clickClose: true,
+                            // layVerify: 'required',
+                            // layVerType: 'tips',
+                            tree: {
+                                show: true,
+                                strict: false,
+                            },
+                            height: '200px',
+                            data: data.list
+                        })
+                    });
+                }
+            });
+        });
+
+        form.on('submit(formSubmit)', function (data) {
+            var loadding = layer.msg('玩命加载中，请稍候...', {icon: 16, time: false, shade: 0.4});
+            var data = data.field;
+            data.status = data.status == 'on' ? 1 : 0;
+            $.ajax({
+                url: parent.parent.appBaseUri + '/v1/resources/dictionary/save',
+                type: 'post',
+                data: data,
+                dataType: 'json',
+                success: function (data) {
+                    layer.close(loadding);
+                    handler(data, function () {
+                        layer.alert(data.msg, {
+                            icon: 1
+                        }, function (index) {
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.layer.close(index);
+                            parent.tableReload();
+                        });
+                    });
+                },
+                error: function (data, status, e) {
+                    layer.alert(data.errorMsg, {
+                        icon: 2
+                    });
+                    layer.close(loadding);
+                }
+            });
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

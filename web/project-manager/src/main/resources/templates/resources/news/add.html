@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="${request.contextPath }/css/layui.css" media="all">
+    <style type="text/css">
+        .layui-col-md3 {
+            width: 11%;
+        }
+
+        .lay-body {
+            background: #fff;
+            margin: 10px;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        .layui-upload img {
+            width: 150px;
+            height: 150px;
+            border-radius: 100%;
+        }
+    </style>
+</head>
+
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="lay-body">
+        <form class="layui-form">
+            <div style="float: left;line-height: 38px;"><h3 style="color: #777777;">添加新闻</h3></div>
+            <div style="float: right;margin-bottom: 5px;">
+                <button class="layui-btn" lay-submit="" lay-filter="formSubmit">保 存</button>
+            </div>
+            <hr>
+            <div class="layui-form-item">
+                <label class="layui-form-label">新闻标题</label>
+                <div class="layui-input-block" style="width: 50%">
+                    <input type="text" name="title" lay-verify="required" lay-verify="title" autocomplete="off"
+                           placeholder="请输入新闻标题"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">所属分类</label>
+                <div class="layui-input-block" style="width: 50%">
+                    <div id="type" class="xm-select-demo"></div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">新闻内容</label>
+                <div class="layui-input-block">
+                    <textarea id="content" style="display: none;"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">状态</label>
+                <div class="layui-input-block ">
+                    <input type="checkbox" name="status" title="启用"/>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="${request.contextPath }/layui.js" charset="utf-8"></script>
+<script src="${request.contextPath }/lay/modules/xm-select.js"></script>
+<script>
+
+    layui.use(['form', 'handler', 'urlparams', 'layedit'], function () {
+        var form = layui.form
+            , $ = layui.$
+            , handler = layui.handler
+            , urlparams = layui.urlparams
+            , layedit = layui.layedit;
+
+        $(function () {
+            var loading = layer.msg('玩命加载中，请稍候...', {icon: 16, time: false, shade: 0.4});
+                        $.ajax({
+                            url: parent.appBaseUri + '/v1/resources/dictionary/matching?classify=classify',
+                            type: 'post',
+                            dataType: 'json',
+                            success: function (data) {
+                                layer.close(loading);
+                                handler(data, function () {
+                                    xmSelect.render({
+                            el: '#type',
+                            model: {label: {type: 'text'}},
+                            radio: true,
+                            name: 'type',
+                            clickClose: true,
+                            layVerify: 'required',
+                            layVerType: 'tips',
+                            tree: {
+                                show: true,
+                                strict: false,
+                            },
+                            height: 'auto',
+                            data: data.list
+                        })
+                    });
+                }
+            });
+        });
+
+        layedit.set({
+            uploadImage: {
+                url: parent.appBaseUri + '/v1/files/upload' //接口url
+            }
+            , tool: [
+                'html', 'code', 'strong', 'underline', 'del', 'addhr', '|', 'fontFomatt', 'colorpicker', 'face'
+                , '|', 'left', 'center', 'right', '|', 'link', 'unlink', 'images', 'image_alt',
+                , '|', 'fullScreen'
+            ]
+            , height: 450, //设置编辑器高度
+        });
+        var editor = layedit.build('content', {
+            tool: ['strong'
+                , 'italic'
+                , 'underline'
+                , 'del'
+                , '|'
+                , 'left'
+                , 'center'
+                , 'right'
+                , '|'
+                , 'link'
+                , 'unlink'
+                , '|'
+                , 'image'
+            ]
+        });
+
+        form.on('submit(formSubmit)', function (data) {
+            var loading = layer.msg('玩命加载中，请稍候...', {icon: 16, time: false, shade: 0.4});
+            var params = data.field;
+            var content = layedit.getContent(editor);
+            params['content'] = content;
+            params['status'] = data.field['status'] == 'on' ? 1 : 0;
+            $.ajax({
+                url: parent.appBaseUri + '/v1/resources/news/save',
+                type: 'post',
+                data: params,
+                dataType: 'json',
+                success: function (data) {
+                    layer.close(loading);
+                    handler(data, function () {
+                        layer.alert(data.msg, {
+                            icon: 1
+                        }, function (index) {
+                            var layId = urlparams("layId");
+                            parent.$("iframe[src='" + layId + "']")[0].contentWindow.tableReload();
+                            var layId = location.pathname + location.search;
+                            parent.delTab(layId);
+                        });
+                    });
+                },
+                error: function (data, status, e) {
+                    layer.alert(data.errorMsg, {
+                        icon: 2
+                    });
+                    layer.close(loading);
+                }
+            });
+            return false;
+        });
+    });
+</script>
+</body>
+
+</html>

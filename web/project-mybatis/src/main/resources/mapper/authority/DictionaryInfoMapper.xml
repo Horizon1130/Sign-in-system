@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.myway.platform.mysql.authority.mapper.DictionaryInfoDao">
+    <select id="getDictionaryListByPage" resultType="java.util.Map">
+        SELECT
+            dictionary_id,
+            code,
+            title,
+            parent_id,
+            (
+                SELECT
+                    children.title
+                FROM
+                    t_dictionary_info children
+                        WHERE
+                        (
+                        children.dictionary_id = d.parent_id
+                        )
+            ) AS parent_title,
+            classify,
+            level,
+            status,
+            create_time
+        FROM
+        t_dictionary_info d
+        <where>
+            <if test="record != null">
+                <if test="record.code != null and record.code != ''">
+                    and code = #{record.code}
+                </if>
+                <if test="record.title != null and record.title != ''">
+                    and title like CONCAT('%',#{record.title},'%')
+                </if>
+                <if test="record.classify != null and record.classify != ''">
+                    and classify = #{record.classify}
+                </if>
+                <if test="record.status != null">
+                    and status = #{record.status}
+                </if>
+            </if>
+        </where>
+        order by classify,parent_id,level
+    </select>
+</mapper>

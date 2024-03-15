@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="tab_checked">#F34D43</color>
+    <color name="tab_unchecked">#9B9B9B</color>
+
+    <color name="type_color">#2A93FF</color>
+
+    <color name="commodity_status_examine">#F24439</color>
+    <color name="commodity_status_downline">#00A2FF</color>
+
+    <color name="range_color">#A591AAED</color>
+
+    <color name="sign_normal_color">#CC01AAED</color>
+    <color name="sign_late_color">#CCFFB800</color>
+</resources>

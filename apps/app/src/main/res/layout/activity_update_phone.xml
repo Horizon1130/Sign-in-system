@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_bg_split"
+    android:orientation="vertical">
+
+    <include layout="@layout/view_title_bar" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:padding="10dp"
+        android:text="手机号"
+        android:textColor="#969696"
+        android:textSize="@dimen/font_small_size" />
+
+    <EditText
+        android:id="@+id/input_update_phone"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:hint="请输入您的手机号"
+        android:inputType="phone"
+        android:maxLength="11"
+        android:padding="10dp"
+        android:textSize="@dimen/font_size" />
+
+</LinearLayout>

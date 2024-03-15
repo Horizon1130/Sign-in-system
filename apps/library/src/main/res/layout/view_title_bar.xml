@@ -1,0 +1,67 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:id="@+id/layout_status_bar"
+        android:layout_width="match_parent"
+        android:layout_height="40px"
+        android:background="@color/view_title_bar"
+        android:orientation="vertical"></LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_title_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/title_height"
+        android:layout_below="@+id/layout_status_bar"
+        android:background="@color/view_title_bar">
+
+        <TextView
+            android:id="@+id/input_bar_title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:padding="8dp"
+            android:text="标题"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_size" />
+
+        <ImageView
+            android:id="@+id/img_bar_left_button"
+            android:layout_width="@dimen/icon_title_back"
+            android:layout_height="@dimen/icon_title_back"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            android:src="@mipmap/ic_back"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/input_bar_right_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:padding="8dp"
+            android:text="添加"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_small_size"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/img_bar_right_button"
+            android:layout_width="@dimen/icon_title_back"
+            android:layout_height="@dimen/icon_title_back"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            android:src="@mipmap/ic_back"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

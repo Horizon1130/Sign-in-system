@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>个人信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="${request.contextPath }/css/layui.css" media="all">
+    <style type="text/css">
+        .layui-col-md3 {
+            width: 11%;
+        }
+
+        .lay-body {
+            background: #fff;
+            margin: 10px;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        .layui-upload img {
+            width: 150px;
+            height: 150px;
+            border-radius: 100%;
+        }
+    </style>
+</head>
+
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="lay-body">
+        <form class="layui-form">
+            <div style="float: left;line-height: 38px;"><h3 style="color: #777777;">用户信息</h3></div>
+            <div style="float: right;margin-bottom: 5px;">
+                <button class="layui-btn" id="btn_save" lay-submit="" lay-filter="formUser">保 存</button>
+            </div>
+            <hr>
+            <div class="layui-row layui-col-space10">
+                <div class="layui-col-md3" style="text-align: center;">
+                    <div class="grid-demo">
+                        <div class="layui-upload">
+                            <div class="layui-upload-list">
+                                <img class="layui-upload-img" id="img_user_face"
+                                     src="${request.contextPath }/images/empty_face.png">
+                                <p id="upload_text"></p>
+                            </div>
+                            <button type="button" class="layui-btn" id="btn_face_upload">
+                                <i class="layui-icon">&#xe61f;</i>上传头像
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md9">
+                    <div class="grid-demo grid-demo-bg1">
+                        <input type="hidden" id="hide_user_id"/>
+                        <input type="hidden" id="hide_role_id"/>
+                        <input type="hidden" id="hide_department_id"/>
+
+                        <div class="layui-form-item" style="width: 400px">
+                            <label class="layui-form-label">账号</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="input_account" lay-verify="required" autocomplete="off"
+                                       placeholder="请输入账号"
+                                       class="layui-input layui-disabled">
+                            </div>
+                        </div>
+                        <div class="layui-form-item" style="width: 400px">
+                            <label class="layui-form-label">姓名</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="input_nice" lay-verify="required" autocomplete="off"
+                                       placeholder="请输入姓名"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item" style="width: 400px">
+                            <label class="layui-form-label">联系电话</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="input_phone" lay-verify="required|phone" autocomplete="off"
+                                       placeholder="请输入联系电话"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item" style="width: 400px">
+                            <label class="layui-form-label">邮箱</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="input_email" lay-verify="required|email" autocomplete="off"
+                                       placeholder="请输入邮箱"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item" style="width: 466px">
+                            <label class="layui-form-label">联系地址</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="input_address" lay-verify="required" autocomplete="off"
+                                       placeholder="请输入联系地址"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item" style="width: 466px">
+                            <label class="layui-form-label">所属角色</label>
+                            <div class="layui-input-block">
+                                <select id="cmd_role" disabled class="layui-disabled">
+                                    <option value="">请选择所属角色</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="${request.contextPath }/layui.js" charset="utf-8"></script>
+<script>
+    var userBase;
+
+    layui.use(['form', 'upload', 'handler'], function () {
+        var form = layui.form;
+        var $ = layui.$;
+        var upload = layui.upload;
+        var handler = layui.handler;
+
+        var loading;
+
+        $(function () {
+            loading = layer.msg('玩命加载中，请稍候...', {
+                icon: 16,
+                time: false,
+                shade: 0.4
+            });
+            $.ajax({
+                url: parent.appBaseUri + '/v1/modify/user',
+                type: 'get',
+                dataType: 'json',
+                success: function (res) {
+                    handler(res, function () {
+                        $('#input_nice').val(res.data.nice);
+                        if (res.data.face) {
+                            $('#img_user_face').attr('src', parent.appBaseUri + '/img/' + res.data.face);
+                        }else {
+                            $('#img_user_face').attr('src', parent.appBaseUri + '/images/empty_face.png');
+                        }
+
+                        $('#input_account').val(res.data.account);
+                        $('#input_phone').val(res.data.phone);
+                        $('#input_email').val(res.data.email);
+                        $('#input_address').val(res.data.address);
+                        $('#hide_role_id').val(res.data.roles);
+                        form.render();
+
+                        loadRoleAll();
+                    });
+                }
+            });
+        });
+
+        function loadRoleAll() {
+            $.ajax({
+                url: parent.appBaseUri + '/v1/settings/role/all',
+                type: 'post',
+                dataType: 'json',
+                success: function (data) {
+                    handler(data, function(){
+                        data.data.forEach(function (v, i) {
+                            var li = '<option value="' + v.roleId + '">' + v.title + '</option>';
+                            $('#cmd_role').append(li);
+                        });
+                        if ($('#hide_role_id').val()) {
+                            $('#cmd_role').val($('#hide_role_id').val());
+                        }
+                        form.render();
+                        layer.close(loading);
+                    });
+                }
+            });
+        }
+
+        var uploadInst = upload.render({
+            elem: '#btn_face_upload',
+            auto: false,
+            size: 300,
+            accept: 'file',
+            choose: function (obj) {
+                obj.preview(function (index, file, result) {
+                    $('#img_user_face').attr('src', result); //图片链接（base64）
+                    userBase = file;
+                });
+            },
+            done: function (res) {
+                console.log(res)
+            },
+            error: function () {
+            }
+        });
+
+        form.on('submit(formUser)', function (data) {
+            var formData = new FormData();
+            formData.append("nice", $("#input_nice").val());
+            formData.append("email", $("#input_email").val());
+            formData.append("phone", $("#input_phone").val());
+            formData.append("address", $("#input_address").val());
+            formData.append("file", userBase);
+            var loadding = layer.msg('玩命加载中，请稍候...', {
+                icon: 16,
+                time: false,
+                shade: 0.4
+            });
+            $.ajax({
+                url: parent.appBaseUri + '/v1/modify/user',
+                type: 'post',
+                cache: false,
+                // 告诉jQuery不要去处理发送的数据
+                processData: false,
+                // 告诉jQuery不要去设置Content-Type请求头
+                contentType: false,
+                data: formData,
+                dataType: 'json',
+                success: function (data) {
+                    layer.close(loadding);
+                    handler(data, function () {
+                        layer.alert(data.msg, {
+                            icon: 1
+                        }, function (i) {
+                            parent.$("#full_user_name").html(data.nice);
+                            parent.$("#small_user_name").html(data.nice);
+                            if (data.face) {
+                                parent.$("#small_user_face").attr("src", parent.appBaseUri + '/img/' + data.face);
+                                parent.$("#full_user_face").attr("src", parent.appBaseUri + '/img/' + data.face);
+                            }
+                            var layId = location.pathname + location.search;
+                            parent.delTab(layId);
+                        });
+                    });
+                }
+            });
+            return false;
+        });
+    });
+</script>
+</body>
+
+</html>

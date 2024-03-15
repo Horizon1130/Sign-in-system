@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/activity_bg_split"
+    android:orientation="vertical">
+
+    <include layout="@layout/view_title_bar" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/id_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/id_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="课程表"
+                android:textColor="@color/app_course_textcolor_blue"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="选择周次"
+                android:textColor="@color/app_gray"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <com.zhuangfei.timetable.view.WeekView
+        android:id="@+id/id_weekview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.zhuangfei.timetable.TimetableView
+        android:id="@+id/id_timetableView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+    </com.zhuangfei.timetable.TimetableView>
+
+</LinearLayout>

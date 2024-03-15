@@ -1,0 +1,58 @@
+<script src="${request.contextPath }/layui.js" charset="utf-8"></script>
+
+<div class="layui-row">
+    <div class="layui-col-md9">
+        <div id="authority_buttons" class="grid-demo grid-demo-bg1">
+
+        </div>
+    </div>
+    <div class="layui-col-md3">
+        <div class="grid-demo" style="float: right; margin-right: 30px;">
+            <button id="btn_search"
+                    class="layui-btn layui-btn-sm layui-btn-normal">
+                <i class="layui-icon">&#xe615;</i>查询
+            </button>
+            <button id="btn_reset"
+                    class="layui-btn layui-btn-sm layui-btn-normal">
+                <i class="layui-icon">&#x1002;</i> 重置
+            </button>
+        </div>
+    </div>
+</div>
+<table class="layui-table" id="lay_table_main" lay-data="{id: 'mainTable'}" lay-filter="main"></table>
+<script>
+    layui.use(['form'], function () {
+        var $ = layui.jquery;
+        var form = layui.form;
+
+        var resourceId = getQueryVariable('resourceId');
+        $.post('${request.contextPath}/v1/authority/' + resourceId + '/buttons', function (data) {
+            if (data.buttons.length > 0) {
+                data.buttons.forEach(function (v, i) {
+                    var button = $('<button id="btn_' + v.url + '" type="button" class="' + v.style + '"><i class="layui-icon">' + v.icon + '</i> ' + v.title + '</button>');
+                    $('#authority_buttons').append(button);
+                });
+
+                data.buttons.forEach(function (v, i) {
+                    $('head').append('<script type="text/javascript" src="${request.contextPath }/libs/${libs }' + v.url + '.js"/>');
+                });
+            } else {
+                $('#authority_buttons').append('&nbsp;');
+            }
+            form.render();
+        }, 'json');
+    });
+
+    function getQueryVariable(variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            if (pair[0] == variable) {
+                return pair[1];
+            }
+        }
+        return (false);
+    }
+</script>
+<script type="text/javascript" src="${request.contextPath }/libs/${libs }list.js"></script>

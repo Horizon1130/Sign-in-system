@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">课堂考勤系统</string>
+    <string name="hint_login_real_name">请输入姓名</string>
+    <string name="hint_login_account">请输入账号</string>
+    <string name="hint_login_password">请输入密码</string>
+    <string name="hint_register_area">请选择行政区</string>
+    <string name="hint_phone_format">请输入有效号码</string>
+    <string name="hint_phone_length">密码不可少于6位</string>
+</resources>

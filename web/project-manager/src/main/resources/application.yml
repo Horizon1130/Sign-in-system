@@ -1,0 +1,58 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+myway:
+  system:
+    domain: http://10.117.10.58:8080/img/
+    #系统标题
+    title: 后台管理平台
+    #系统权限
+    copyright: Copyright © 2023, 后台管理平台, All Rights Reserved
+
+spring:
+  freemarker:
+    charset: UTF-8
+    content-type: text/html
+    suffix: .html
+    template-loader-path: classpath:/templates
+    request-context-attribute: request
+    cache: false
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  datasource:
+    authority:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/db_project?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf8
+      username: root
+      type: com.alibaba.druid.pool.DruidDataSource
+      password: 123456
+      # 连接池的配置信息
+      # 初始化大小，最小等待连接数量，最大等待连接数量，最大连接数
+      initialSize: 1
+      minIdle: 1
+      maxActive: 20
+      # 配置获取连接等待超时的时间
+      maxWait: 60000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: SELECT 1 FROM DUAL
+      testWhileIdle: true
+      testOnBorrow: true
+      testOnReturn: false
+      # 打开PSCache，并且指定每个连接上PSCache的大小
+      poolPreparedStatements: false
+      maxPoolPreparedStatementPerConnectionSize: 20
+      # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+      filters:
+        commons-log.connection-logger-name: stat,wall,log4j
+      # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+
+logging:
+  level.com.myway.platform.mysql: debug

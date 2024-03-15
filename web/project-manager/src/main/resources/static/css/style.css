@@ -1,0 +1,34 @@
+.layui-breadcrumb a {
+	padding-right: 8px;
+	line-height: 22px;
+	font-size: 14px;
+	color: #333 !important;
+}
+
+.layui-breadcrumb a span {
+	padding-left: 8px;
+	font-family: Sim sun;
+}
+
+.layui-breadcrumb a cite, .layui-breadcrumb a span {
+	color: #666;
+	cursor: text;
+	font-style: normal;
+}
+
+.layui-box, .layui-box * {
+	box-sizing: content-box;
+}
+
+body {
+	padding: 10px;
+}
+
+.layui-item-body{
+	background-color: white;
+	padding: 10px;
+}
+
+.layui-badge-dot {
+	margin-right: 10px;
+}

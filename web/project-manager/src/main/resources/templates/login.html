@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>${(title)!} - 登录</title>
+    <link rel="stylesheet" href="${request.contextPath}/css/layui.css">
+    <style type="text/css">
+        .layui-layout-body {
+            width: 100%;
+            background-repeat: no-repeat;
+            background-image: url("${request.contextPath}/images/bg_login.jpg");
+        }
+
+        .header-title {
+            background-image: url("${request.contextPath}/images/header_title.png");
+            background-size: 774px 108px;
+            width: 774px;
+            height: 108px;
+            position: relative;
+            left: 50%;
+            margin-left: -387px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-title span {
+            font-size: 40px;
+            color: #00EEFE;
+        }
+
+        .login-content {
+            position: absolute;
+            background: #0B417E;
+            width: 400px;
+            height: 430px;
+            right: 200px;
+            top: 260px;
+            border-radius: 5px;
+            opacity: 0.9;
+        }
+
+        .login-content .body {
+            margin: 70px;
+        }
+
+        .login-content .title {
+            color: #fff;
+            font-size: 20px;
+            margin-top: 50px;
+        }
+
+        .layui-icon {
+            margin-right: 10px;
+        }
+
+        .login-input {
+            margin-top: 30px;
+            border: 1px #147FBB solid;
+            border-radius: 5px;
+            background: #0B417E;
+            padding-left: 10px;
+            padding-right: 8px;
+            color: #147FBB;
+        }
+
+        .login-input input {
+            height: 38px;
+            background: #0B417E;
+            border: 0;
+            color: #fff;
+        }
+
+        .login-input input::-webkit-input-placeholder {
+            color: #147FBB;
+        }
+
+    </style>
+</head>
+
+<body class="layui-layout-body">
+
+<div class="header-title">
+    <span>
+        ${(title)!}
+    </span>
+</div>
+<div class="login-content">
+    <div class="body">
+        <div class="title">登录</div>
+        <form class="layui-form">
+            <div class="login-input">
+                <i class="layui-icon layui-icon-username"></i>
+                <input id="input_account" name="account" type="text" maxlength="25" lay-verify="required" placeholder="请输入用户名"
+                       autocomplete="off" value="admin">
+            </div>
+            <div class="login-input">
+                <i class="layui-icon layui-icon-password"></i>
+                <input name="password" type="password" maxlength="30" lay-verify="required" placeholder="请输入用户密码"
+                       autocomplete="off" value="123456">
+            </div>
+            <!--<div style="display: flex;align-items: center;">
+                <div class="login-input" style="width: 130px;">
+                    <i class="layui-icon layui-icon-vercode"></i>
+                    <input name="code" type="text" maxlength="5" style="width: 100px;" lay-verify=""
+                           placeholder="验证码" autocomplete="off">
+                </div>
+                <img id="codeImg" alt="验证码" style="height: 38px;width: 80px;margin-top: 30px;margin-left: 30px;"
+                     src="${request.contextPath}/code"/>
+            </div>-->
+            <button type="submit" lay-submit="" lay-filter="formLogin" style="width: 100%;margin-top: 30px;"
+                    class="layui-btn layui-btn-normal">登　录
+            </button>
+        </form>
+    </div>
+</div>
+
+<script src="${request.contextPath}/layui.js"></script>
+<script>
+    layui.use(['form', 'handler'], function () {
+        var form = layui.form, $ = layui.$, handler = layui.handler;
+
+        $("#codeImg").click(function () {
+            reloadCode();
+        });
+
+        function reloadCode() {
+            var imgCode = $("#codeImg");
+            var codeUrl = imgCode.attr("src");
+            imgCode.attr("src", chgUrl(codeUrl));
+        }
+
+        function chgUrl(url) {
+            var timestamp = (new Date()).valueOf();
+            if ((url.indexOf("&") >= 0)) {
+                url = url + "&timestamp=" + timestamp;
+            } else {
+                url = url + "?timestamp=" + timestamp;
+            }
+            return url;
+        }
+
+        form.on('submit(formLogin)', function (data) {
+            var loading = layer.msg('玩命加载中，请稍候...', {icon: 16, time: false, shade: 0.4});
+
+            $.ajax({
+                url: '${(request.contextPath)!}/login',
+                type: 'post',
+                data: data.field,
+                dataType: 'json',
+                success: function (data) {
+                    layer.close(loading);
+                    handler(data, function () {
+                        location.href = data.mapper;
+                    }, function () {
+                        reloadCode();
+                        layer.alert(data.errorMsg, {
+                            icon: 2
+                        });
+                    });
+                },
+                error: function (data, status, e) {
+                    layer.alert(data.errorMsg, {
+                        icon: 2
+                    });
+                    layer.close(loading);
+                }
+            });
+            return false;
+        });
+    });
+</script>
+</body>
+
+</html>
